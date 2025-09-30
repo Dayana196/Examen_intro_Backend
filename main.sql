@@ -1,13 +1,11 @@
 CREATE TABLE `Libros`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `Titulo_Libro` VARCHAR(100) NOT NULL,
-    `Autores_fk` BIGINT NOT NULL,
-    `Editorial_fk` ENUM('') NOT NULL COMMENT 'Expositivo y argumentativo',
-    `Categoria_fk` BIGINT NOT NULL,
-    `Fecha_publicacion` DATETIME NOT NULL,
-    `ISBN_fk` INT NOT NULL,
-    `Stok_fk` BIGINT NOT NULL,
-    `Pedidos_fk` BIGINT NOT NULL
+    `Categoria_fk` ENUM('') NOT NULL,
+    `Fecha_publicacion` DATE NOT NULL,
+    `precio` INT NOT NULL,
+    `cantidad` INT NOT NULL,
+    `Editorial_fk` BIGINT NOT NULL
 );
 CREATE TABLE `Clientes`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -24,8 +22,7 @@ CREATE TABLE `Pedidos`(
         'Pendiente',
         'procesado',
         'completado'
-    ) NOT NULL DEFAULT 'Estado_libro',
-    `Precio_fk` BIGINT NOT NULL
+    ) NOT NULL DEFAULT 'Estado_libro'
 );
 CREATE TABLE `Transacciones`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -44,40 +41,40 @@ CREATE TABLE `Categorias`(
 CREATE TABLE `Autores`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `Nombre` VARCHAR(100) NOT NULL,
-    `Nacimiento` VARCHAR(100) NOT NULL,
+    `Nacimiento` DATETIME NOT NULL,
     `Nacionalidad` VARCHAR(100) NOT NULL
 );
 CREATE TABLE `Editorial`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `Nombre_Editor` VARCHAR(100) NOT NULL
+    `Nombre_Editor` VARCHAR(100) NOT NULL,
+    `direccion` BIGINT NOT NULL
 );
-CREATE TABLE `Cantidad_stok`(
+CREATE TABLE `Proceso_libro`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `cantidad_libro` INT NOT NULL
+    `id_pedidos_fk` BIGINT NOT NULL,
+    `libros_fk` BIGINT NOT NULL,
+    `cantidad` INT NOT NULL,
+    `precio` INT NOT NULL,
+    `total` INT NOT NULL
 );
-CREATE TABLE `ISBN`(
+CREATE TABLE `Autor libro`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `id_isbn` BIGINT(15) NOT NULL
+    `autores_fk` BIGINT NOT NULL,
+    `libros_fk` BIGINT NOT NULL
 );
-CREATE TABLE `Precio`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `Valor_Libro` BIGINT NOT NULL
-);
+ALTER TABLE
+    `Autor libro` ADD CONSTRAINT `autor libro_autores_fk_foreign` FOREIGN KEY(`autores_fk`) REFERENCES `Autores`(`id`);
 ALTER TABLE
     `Pedidos` ADD CONSTRAINT `pedidos_cliente_foreign` FOREIGN KEY(`Cliente`) REFERENCES `Clientes`(`id`);
 ALTER TABLE
     `Libros` ADD CONSTRAINT `libros_editorial_fk_foreign` FOREIGN KEY(`Editorial_fk`) REFERENCES `Editorial`(`id`);
 ALTER TABLE
-    `Libros` ADD CONSTRAINT `libros_pedidos_fk_foreign` FOREIGN KEY(`Pedidos_fk`) REFERENCES `Pedidos`(`id`);
-ALTER TABLE
-    `Libros` ADD CONSTRAINT `libros_stok_fk_foreign` FOREIGN KEY(`Stok_fk`) REFERENCES `Cantidad_stok`(`id`);
-ALTER TABLE
-    `Libros` ADD CONSTRAINT `libros_autores_fk_foreign` FOREIGN KEY(`Autores_fk`) REFERENCES `Autores`(`id`);
+    `Autor libro` ADD CONSTRAINT `autor libro_libros_fk_foreign` FOREIGN KEY(`libros_fk`) REFERENCES `Libros`(`id`);
 ALTER TABLE
     `Transacciones` ADD CONSTRAINT `transacciones_pedidos_fk_foreign` FOREIGN KEY(`pedidos_fk`) REFERENCES `Pedidos`(`id`);
 ALTER TABLE
+    `Proceso_libro` ADD CONSTRAINT `proceso_libro_id_pedidos_fk_foreign` FOREIGN KEY(`id_pedidos_fk`) REFERENCES `Pedidos`(`id`);
+ALTER TABLE
     `Libros` ADD CONSTRAINT `libros_categoria_fk_foreign` FOREIGN KEY(`Categoria_fk`) REFERENCES `Categorias`(`id`);
 ALTER TABLE
-    `Pedidos` ADD CONSTRAINT `pedidos_precio_fk_foreign` FOREIGN KEY(`Precio_fk`) REFERENCES `Precio`(`id`);
-ALTER TABLE
-    `Libros` ADD CONSTRAINT `libros_isbn_fk_foreign` FOREIGN KEY(`ISBN_fk`) REFERENCES `ISBN`(`id`);
+    `Proceso_libro` ADD CONSTRAINT `proceso_libro_libros_fk_foreign` FOREIGN KEY(`libros_fk`) REFERENCES `Libros`(`id`);

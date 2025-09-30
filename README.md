@@ -55,16 +55,6 @@ Campos:
 
 - Nombre_categoria: Nombre de la categoría.
 
-## ISBN
-
-- Guarda el número de identificación único de cada libro.
-
-Campos:
-
-- id: Identificador.
-
-- id_isbn: Número ISBN.
-
 ## Libros
 
 - Almacena la información principal de cada libro.
@@ -89,15 +79,6 @@ Campos:
 
 - Pedidos_fk: Relación con pedidos.
 
-## Cantidad_stok
-
-- Controla el inventario de libros disponibles.
-
-Campos:
-
-- id: Identificador.
-
-- cantidad_libro: Número de LIBROS.
 
 ## Precio
 
